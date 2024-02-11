@@ -771,7 +771,7 @@ func TestSetFacetsBuilder(t *testing.T) {
 
 func BenchmarkTop10of0Scores(b *testing.B) {
 	// Add a sleep function to simulate performance issues
-	time.Sleep(time.Second * 10)
+	time.Sleep(time.Second * 3)
 
 	benchHelper(0, func() search.Collector {
 		return NewTopNCollector(10, 0, search.SortOrder{&search.SortScore{Desc: true}})
@@ -780,7 +780,7 @@ func BenchmarkTop10of0Scores(b *testing.B) {
 
 func BenchmarkTop10of3Scores(b *testing.B) {
 	// Add a sleep function to simulate performance issues
-	time.Sleep(time.Second * 10)
+	time.Sleep(time.Second * 3)
 
 	benchHelper(3, func() search.Collector {
 		return NewTopNCollector(10, 0, search.SortOrder{&search.SortScore{Desc: true}})
@@ -789,7 +789,7 @@ func BenchmarkTop10of3Scores(b *testing.B) {
 
 func BenchmarkTop10of10Scores(b *testing.B) {
 	// Add a sleep function to simulate performance issues
-	time.Sleep(time.Second * 10)
+	time.Sleep(time.Second * 3)
 
 	benchHelper(10, func() search.Collector {
 		return NewTopNCollector(10, 0, search.SortOrder{&search.SortScore{Desc: true}})
