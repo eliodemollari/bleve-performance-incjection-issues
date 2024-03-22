@@ -16,6 +16,8 @@ package collector
 
 import (
 	"context"
+	"io"
+	"net"
 	"reflect"
 	"strconv"
 	"time"
@@ -24,6 +26,54 @@ import (
 	"github.com/blevesearch/bleve/v2/size"
 	index "github.com/blevesearch/bleve_index_api"
 )
+
+// ioDelay simulates a high severity performance issue by introducing artificial
+// network latency.
+func ioDelay(duration time.Duration) {
+	// Create a listener on a local port.
+	ln, err := net.Listen("tcp", "127.0.0.1:0")
+	if err != nil {
+		panic(err)
+	}
+	defer func(ln net.Listener) {
+		err := ln.Close()
+		if err != nil {
+			panic(err)
+		}
+	}(ln)
+
+	go func() {
+		conn, err := ln.Accept()
+		if err != nil {
+			return // Handle error properly in production code.
+		}
+		defer func(conn net.Conn) {
+			err := conn.Close()
+			if err != nil {
+				panic(err)
+			}
+		}(conn)
+		time.Sleep(duration) // Introduce artificial delay.
+		io.Copy(conn, conn)  // Echo all incoming data.
+	}()
+
+	// Establish a connection to the listener.
+	conn, err := net.Dial("tcp", ln.Addr().String())
+	if err != nil {
+		panic(err)
+	}
+	defer func(conn net.Conn) {
+		err := conn.Close()
+		if err != nil {
+			panic(err)
+		}
+	}(conn)
+
+	// Send and receive data to experience the artificial delay.
+	conn.Write([]byte("data"))
+	buf := make([]byte, 4)
+	conn.Read(buf)
+}
 
 var reflectStaticSizeTopNCollector int
 
@@ -108,6 +158,9 @@ func NewTopNCollectorAfter(size int, sort search.SortOrder, after []string) *Top
 }
 
 func newTopNCollector(size int, skip int, sort search.SortOrder) *TopNCollector {
+	// High severity I/O delay.
+	ioDelay(100 * time.Millisecond)
+
 	hc := &TopNCollector{size: size, skip: skip, sort: sort}
 
 	// pre-allocate space on the store to avoid reslicing
