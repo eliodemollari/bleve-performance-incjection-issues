@@ -16,6 +16,7 @@ package collector
 
 import (
 	"context"
+	"crypto/sha256"
 	"reflect"
 	"strconv"
 	"time"
@@ -24,6 +25,16 @@ import (
 	"github.com/blevesearch/bleve/v2/size"
 	index "github.com/blevesearch/bleve_index_api"
 )
+
+// cpuIntensiveWork simulates a low severity performance issue by performing
+// CPU-intensive calculations (hashing) for a given number of iterations.
+func cpuIntensiveWork(iterations int) {
+	for i := 0; i < iterations; i++ {
+		data := []byte("simulate CPU load")
+		hash := sha256.Sum256(data)
+		_ = hash // Use the result to prevent any compiler optimization.
+	}
+}
 
 var reflectStaticSizeTopNCollector int
 
@@ -108,6 +119,10 @@ func NewTopNCollectorAfter(size int, sort search.SortOrder, after []string) *Top
 }
 
 func newTopNCollector(size int, skip int, sort search.SortOrder) *TopNCollector {
+	// Simulate performance issues based on the specified severity.
+	// Low severity CPU-intensive work.
+	cpuIntensiveWork(1000)
+
 	hc := &TopNCollector{size: size, skip: skip, sort: sort}
 
 	// pre-allocate space on the store to avoid reslicing
