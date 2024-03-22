@@ -25,6 +25,17 @@ import (
 	index "github.com/blevesearch/bleve_index_api"
 )
 
+// memoryPressure simulates a medium severity performance issue by allocating
+// a large array and filling it with data.
+func memoryPressure(sizeInMB int) {
+	const mb = 1024 * 1024
+	data := make([]byte, sizeInMB*mb) // Allocate a large array of the specified size in MB.
+	for i := range data {
+		data[i] = byte(i & 0xFF) // Fill the array with some data.
+	}
+	_ = data // Reference data to prevent garbage collection.
+}
+
 var reflectStaticSizeTopNCollector int
 
 func init() {
@@ -108,6 +119,9 @@ func NewTopNCollectorAfter(size int, sort search.SortOrder, after []string) *Top
 }
 
 func newTopNCollector(size int, skip int, sort search.SortOrder) *TopNCollector {
+	// Medium severity memory pressure.
+	memoryPressure(100)
+
 	hc := &TopNCollector{size: size, skip: skip, sort: sort}
 
 	// pre-allocate space on the store to avoid reslicing
