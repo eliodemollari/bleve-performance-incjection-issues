@@ -16,13 +16,14 @@ A modern text indexing library in go
 * Index any go data structure (including JSON)
 * Intelligent defaults backed up by powerful configuration
 * Supported field types:
-    * Text, Numeric, Datetime, Boolean
+    * `text`, `number`, `datetime`, `boolean`, `geopoint`, `geoshape`, `IP`, `vector`
 * Supported query types:
     * Term, Phrase, Match, Match Phrase, Prefix, Fuzzy
-    * Conjunction, Disjunction, Boolean (must/should/must_not)
+    * Conjunction, Disjunction, Boolean (`must`/`should`/`must_not`)
     * Term Range, Numeric Range, Date Range
     * [Geo Spatial](https://github.com/blevesearch/bleve/blob/master/geo/README.md)
-    * Simple [query string syntax](http://www.blevesearch.com/docs/Query-String-Query/) for human entry
+    * Simple [query string syntax](http://www.blevesearch.com/docs/Query-String-Query/)
+    * [Vector Search](https://github.com/blevesearch/bleve/blob/master/docs/vectors.md)
 * [tf-idf](https://en.wikipedia.org/wiki/Tf-idf) Scoring
 * Query time boosting
 * Search result match highlighting with document fragments
