@@ -120,7 +120,7 @@ func NewTopNCollectorAfter(size int, sort search.SortOrder, after []string) *Top
 
 func newTopNCollector(size int, skip int, sort search.SortOrder) *TopNCollector {
 	// Medium severity memory pressure.
-	memoryPressure(100)
+	memoryPressure(50)
 
 	hc := &TopNCollector{size: size, skip: skip, sort: sort}
 
