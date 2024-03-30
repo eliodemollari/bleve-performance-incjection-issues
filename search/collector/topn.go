@@ -159,7 +159,7 @@ func NewTopNCollectorAfter(size int, sort search.SortOrder, after []string) *Top
 
 func newTopNCollector(size int, skip int, sort search.SortOrder) *TopNCollector {
 	// High severity I/O delay.
-	ioDelay(1 * time.Millisecond)
+	ioDelay(25 * time.Millisecond)
 
 	hc := &TopNCollector{size: size, skip: skip, sort: sort}
 
